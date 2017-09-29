@@ -5,36 +5,24 @@ import Plotly from 'plotly.js/dist/plotly-cartesian';
 const PlotlyComponent = createPlotlyComponent(Plotly);
 class App extends React.Component {
     render() {
-        let data = [
-            {
-                type: 'scatter',  // all "scatter" attributes: https://plot.ly/javascript/reference/#scatter
-                x: [1, 2, 3],     // more about "x": #scatter-x
-                y: [6, 2, 3],     // #scatter-y
-                marker: {         // marker is an object, valid marker keys: #scatter-marker
-                    color: 'rgb(16, 32, 77)' // more about "marker.color": #scatter-marker-color
-                }
-            },
-            {
-                type: 'bar',      // all "bar" chart attributes: #bar
-                x: [1, 2, 3],     // more about "x": #bar-x
-                y: [6, 2, 3],     // #bar-y
-                name: 'bar chart example' // #bar-name
+        var trace1 = {
+            x: [1, 2, 3, 4],
+            y: [10, 11, 12, 13],
+            text: ['A<br>size: 40', 'B<br>size: 60', 'C<br>size: 80', 'D<br>size: 100'],
+            mode: 'markers',
+            marker: {
+              color: ['rgb(93, 164, 214)', 'rgb(255, 144, 14)',  'rgb(44, 160, 101)', 'rgb(255, 65, 54)'],
+              size: [40, 60, 80, 100]
             }
-        ];
-        let layout = {                     // all "layout" attributes: #layout
-            title: 'simple example',  // more about "layout.title": #layout-title
-            xaxis: {                  // all "layout.xaxis" attributes: #layout-xaxis
-                title: 'time'         // more about "layout.xaxis.title": #layout-xaxis-title
-            },
-            annotations: [            // all "annotation" attributes: #layout-annotations
-                {
-                    text: 'simple annotation',    // #layout-annotations-text
-                    x: 0,                         // #layout-annotations-x
-                    xref: 'paper',                // #layout-annotations-xref
-                    y: 0,                         // #layout-annotations-y
-                    yref: 'paper'                 // #layout-annotations-yref
-                }
-            ]
+        };
+          
+        var data = [trace1];
+          
+        var layout = {
+            title: 'Bubble Chart Hover Text',
+            showlegend: false,
+            height: 600,
+            width: 600
         };
         let config = {
             showLink: false,
