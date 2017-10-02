@@ -5,51 +5,41 @@ import Plotly from 'plotly.js/dist/plotly-cartesian';
 const PlotlyComponent = createPlotlyComponent(Plotly);
 
 class Bubble extends React.Component {
+
+
+    constructor(props) {
+      super(props);
+      this.state = { data: props.data, layout: props.layout, config: props.config};
+      this.nextState = this.state;
+      this.bubble = <PlotlyComponent className="whatever" data={this.state.data} layout={this.state.layout} config={this.state.config}/>;
+      this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+    }
+    
+    componentDidMount() {
+      this.updateWindowDimensions();
+      window.addEventListener('resize', this.updateWindowDimensions);
+    }
+    
+    componentWillUnmount() {
+      window.removeEventListener('resize', this.updateWindowDimensions);
+    }
+    
+    updateWindowDimensions() {
+      this.nextState = this.state;
+      this.bubble = '';
+      this.nextState.layout.width = window.innerWidth;
+      this.nextState.layout.height = window.innerHeight;
+      this.setState(this.nextState);
+      this.bubble = <PlotlyComponent className="whatever" data={this.state.data} layout={this.state.layout} config={this.state.config}/>;
+      this.forceUpdate();
+    }
+
     render() {
-        let data = [
-          {
-            type: 'scatter',  // all "scatter" attributes: https://plot.ly/javascript/reference/#scatter
-            x: [1, 2, 3],     // more about "x": #scatter-x
-            y: [6, 2, 3],     // #scatter-y
-            marker: {         // marker is an object, valid marker keys: #scatter-marker
-              color: 'rgb(16, 32, 77)' // more about "marker.color": #scatter-marker-color
-            }
-          },
-          {
-            type: 'bar',      // all "bar" chart attributes: #bar
-            x: [1, 2, 3],     // more about "x": #bar-x
-            y: [6, 2, 3],     // #bar-y
-            name: 'bar chart example' // #bar-name
-          }
-        ];
-        let layout = {                     // all "layout" attributes: #layout
-          title: 'simple example',  // more about "layout.title": #layout-title
-          xaxis: {                  // all "layout.xaxis" attributes: #layout-xaxis
-            title: 'time'         // more about "layout.xaxis.title": #layout-xaxis-title
-          },
-          annotations: [            // all "annotation" attributes: #layout-annotations
-            {
-              text: 'simple annotation',    // #layout-annotations-text
-              x: 0,                         // #layout-annotations-x
-              xref: 'paper',                // #layout-annotations-xref
-              y: 0,                         // #layout-annotations-y
-              yref: 'paper'                 // #layout-annotations-yref
-            }
-          ]
-        };
-        let config = {
-          showLink: false,
-          displayModeBar: true
-        };
-        
-        console.log('props data:');
-        console.log(this.props.data);
-        console.log('props layout:');
-        console.log( this.props.layout);
-        console.log('props config:');
-        console.log( this.props.config);
+        console.log(this.state.layout);
         return (
-          <PlotlyComponent className="whatever" data={this.props.data} layout={this.props.layout} config={this.props.config}/>
+          <div>
+            {this.bubble}
+          </div>
         );
       }
 }

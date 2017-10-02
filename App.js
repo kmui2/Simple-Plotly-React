@@ -8,6 +8,27 @@ import Plotly from 'plotly.js/dist/plotly-cartesian';
 import Bubble from './Bubble.js';
 import Rx from 'rxjs';
 
+const csv = `ageinterval10,sex,total_survived,mean_survived
+,female,36,0.68
+,male,16,0.13
+0 to 9,female,19,0.63
+0 to 9,male,19,0.59
+10 to 19,female,34,0.76
+10 to 19,male,7,0.12
+20 to 29,female,52,0.73
+20 to 29,male,25,0.17
+30 to 39,female,50,0.83
+30 to 39,male,23,0.21
+40 to 49,female,22,0.69
+40 to 49,male,12,0.21
+50 to 59,female,16,0.89
+50 to 59,male,4,0.13
+60 to 69,female,4,1
+60 to 69,male,2,0.13
+70 to 79,male,0,0.00
+80 to 89,male,1,1.00
+`
+
 const PlotlyComponent = createPlotlyComponent(Plotly);
 class App extends React.Component {
     constructor() {
@@ -15,14 +36,13 @@ class App extends React.Component {
         this.state = { files: [], data: [] , layout: {}, ready: false};
         this.plotBubbleChart = this.plotBubbleChart.bind(this);
         this.renderBubbleChart = this.renderBubbleChart.bind(this);
+        this.onDrop([csv]);
+
     }
 
     onDrop(files) {
-        this.setState({
-            files
-        });
-        console.log(files);
-        Papa.parse(files[0], {
+        console.log(files[0]);
+        Papa.parse(csv, {
             delimiter: ",",
             header: true,
             dynamicTyping: true,
@@ -115,15 +135,16 @@ class App extends React.Component {
         };
     
           
-          this.state.data = [male, female];
-          
-          this.state.layout = {
+        this.state.data = [male, female];
+        
+        this.state.layout = {
             title: 'Marker Size',
             showlegend: true,
-            height: 600,
-            width: 600
-          };    
-          this.state.config = {
+            // Do these in Bubble.js
+            // height: 600,
+            // width: 600
+        };    
+        this.state.config = {
             showLink: false,
             displayModeBar: true
         };
@@ -142,31 +163,10 @@ class App extends React.Component {
     }
 
     render() {
-        var trace1 = {
-            x: [1, 2, 3, 4],
-            y: [10, 11, 12, 13],
-            text: ['A<br>size: 40', 'B<br>size: 60', 'C<br>size: 80', 'D<br>size: 100'],
-            mode: 'markers',
-            marker: {
-              color: ['rgb(93, 164, 214)', 'rgb(255, 144, 14)',  'rgb(44, 160, 101)', 'rgb(255, 65, 54)'],
-              size: [40, 60, 80, 100]
-            }
-        };
-          
-        var data = [trace1];
-          
-        var layout = {
-            title: 'Bubble Chart Hover Text',
-            showlegend: false,
-            height: 600,
-            width: 600
-        };
-        let config = {
-            showLink: false,
-            displayModeBar: true
-        };
+       
         return (
             <div className="App">
+                {this.state.ready ? this.renderBubbleChart() : 'Upload file TWICE to plot'}
                 <section>
                     <div className="dropzone">
                         <Dropzone onDrop={this.onDrop.bind(this)}>
@@ -176,13 +176,10 @@ class App extends React.Component {
                     <aside>
                         <h2>Dropped files</h2>
                         <ul>
-                            {
-                                this.state.files.map(f => <li key={f.name}>{f.name} - {f.size} bytes</li>)
-                            }
+                            {this.state.files.map(f => <li key={f.name}>{f.name} - {f.size} bytes</li>)}
                         </ul>
                     </aside>
                 </section>
-                {this.state.ready ? this.renderBubbleChart() : 'Upload file TWICE to plot'}
             </div>
         );
     }
